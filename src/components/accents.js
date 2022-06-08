@@ -1,14 +1,28 @@
 /** @jsxImportSource @emotion/react */
 
+import { useState } from "react";
+import { motion } from "framer-motion";
+
+const textItem = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+
+  margin: 0,
+
+  fontFamily: "Inter, sans-serif",
+};
+
 const Button = ({ accent, shortcut }) => {
   return (
-    <button
+    <motion.button
+      whileTap={{ scale: 0.95 }}
       css={{
         display: "flex",
         flexDirection: "column",
 
         width: 50,
-        height: 70,
+        height: 65,
 
         cursor: "pointer",
         border: 0,
@@ -17,9 +31,9 @@ const Button = ({ accent, shortcut }) => {
         background: "white",
       }}
     >
-      <h1 css={{ flex: 1, textAlign: "center", margin: 0 }}>{accent}</h1>
-      <h2 css={{ flex: 1, textAlign: "center", margin: 0 }}>{shortcut}</h2>
-    </button>
+      <h1 css={[textItem, { flex: 4 }]}>{accent}</h1>
+      <h2 css={[textItem, { flex: 3, color: "#494f5a" }]}>{shortcut}</h2>
+    </motion.button>
   );
 };
 
@@ -44,8 +58,8 @@ const Accents = () => {
         zIndex: 1,
       }}
     >
-      {fakedata.map((datum) => (
-        <Button accent={datum[0]} shortcut={datum[1]} />
+      {fakedata.map((datum, i) => (
+        <Button key={`button-${i}`} accent={datum[0]} shortcut={datum[1]} />
       ))}
     </div>
   );
