@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from "react";
 
 import { useAsyncReducer } from "../util";
+import { ACCENTS } from "../util/data";
 
 const defState = {
   keyPresses: [],
@@ -14,13 +15,11 @@ const keybindReducer = (state, { type, event }) => {
       return { ...state, keyPresses: [...state.keyPresses, keyPress] };
     }
     case "REM_KEYPRESS": {
-      const code = event;
+      const key = event;
 
       return {
         ...state,
-        keyPresses: state.keyPresses.filter(
-          (keyPress) => keyPress.code !== code
-        ),
+        keyPresses: state.keyPresses.filter((keyPress) => keyPress.key !== key),
       };
     }
     default:
@@ -39,10 +38,10 @@ const EventListener = ({ children }) => {
   // useCallback to prevent unecessary useEffect calls
   // handleDetectKeyUp is called whenever a keyUp is detected
   const handleAddKeyUp = useCallback(
-    ({ code, timeStamp }) => {
+    ({ key, timeStamp }) => {
       dispatchKeybind([
-        keyUpHandler({ code, timeStamp }),
-        { type: "REM_KEYPRESS", event: code },
+        keyUpHandler({ key, timeStamp }),
+        { type: "REM_KEYPRESS", event: key },
       ]); // handle keyPress and remove key
     },
     [dispatchKeybind]
@@ -52,18 +51,19 @@ const EventListener = ({ children }) => {
   // it calls keyDownHandler which handles any further logic
   const handleAddKeyDown = useCallback(
     (event) => {
-      const { code, timeStamp } = event;
+      const { key, timeStamp } = event;
 
       // if we were already pressing the current key, don't record it
-      if (keyPresses.findIndex((key) => key.code === code) >= 0) {
-        event.preventDefault(); // prevent double typing letters
+      if (keyPresses.findIndex((kp) => kp.key === key) >= 0) {
+        if (key in ACCENTS) event.preventDefault(); // prevent double typing "interesting" letters
+
         return;
       }
 
       // add key to keyPresses and call handler with newest state
       dispatchKeybind([
-        { type: "ADD_KEYPRESS", event: { code, timeStamp } },
-        keyDownHandler({ code, timeStamp }),
+        { type: "ADD_KEYPRESS", event: { key, timeStamp } },
+        keyDownHandler({ key, timeStamp }),
       ]);
     },
     [keyPresses, dispatchKeybind]
@@ -84,16 +84,16 @@ const EventListener = ({ children }) => {
   }, [handleAddKeyDown, handleAddKeyUp]);
 
   const keyDownHandler =
-    ({ code }) =>
+    ({ key, timeStamp }) =>
     (dispatchKeybind, getState) => {
-      console.log("detected keydown", code);
+      if (key in ACCENTS) {
+        console.log("detected useful key", key);
+      }
     };
 
   const keyUpHandler =
-    ({ code }) =>
-    (dispatchKeybind, getState) => {
-      console.log("detected keyup", code);
-    };
+    ({ key }) =>
+    (dispatchKeybind, getState) => {};
 
   return children;
 };
