@@ -1,5 +1,6 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useContext } from "react";
 
+import { ModalContext } from "../../util/context";
 import { useAsyncReducer } from "../../util/index";
 import { getTextAreaCaret } from "../../util/caret";
 import { ACCENTS } from "../../util/data";
@@ -52,6 +53,8 @@ const keybindReducer = (state, { type, event }) => {
 };
 
 const KeyListener = ({ children, setShow }) => {
+  const { show } = useContext(ModalContext);
+
   const [keybindState, dispatchKeybind] = useAsyncReducer(
     keybindReducer,
     defState
@@ -71,9 +74,9 @@ const KeyListener = ({ children, setShow }) => {
       // tracker.style.left = x + "px";
 
       // modal may need target element for inserting characters at the correct index
-      setShow({ display: true, targetEl, key, pos: { x, y } });
+      show({ display: true, targetEl, key, pos: { x, y } });
     },
-    [setShow]
+    [show]
   );
 
   // called whenever presses a key

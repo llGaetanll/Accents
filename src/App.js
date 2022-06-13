@@ -1,42 +1,24 @@
-import { useState } from "react";
-import { GlobalHotKeys } from "react-hotkeys";
+import { Provider as StateProvider } from "react-redux";
+import { ModalProvider } from "./util/context";
 
 import Modal from "./components/Modal";
-import KeyListener from "./components/accents/KeyListener";
 
-// import { keyMap, handlers } from "./util/hotkeys";
+import store from "./store";
 
 import "./App.css";
 
-const defState = {
-  display: false,
-  key: null,
-  targetEl: null,
-  pos: null,
-};
-
 function App() {
-  const [show, setShow] = useState(defState);
-
-  const keyMap = {
-    HIDE: ["esc", "backspace"],
-  };
-
-  const handlers = {
-    HIDE: () => setShow((s) => defState),
-  };
-
   return (
-    <GlobalHotKeys keyMap={keyMap} handlers={handlers}>
-      <KeyListener setShow={setShow}>
+    <ModalProvider>
+      <StateProvider store={store}>
         <div style={{ display: "flex", flexDirection: "column", width: 300 }}>
-          <Modal show={show} />
+          <Modal />
           <textarea rows="10" />
           {/* <div id="caret-tracker" style={{ zIndex: 2 }} /> */}
         </div>
         <div id="bg" />
-      </KeyListener>
-    </GlobalHotKeys>
+      </StateProvider>
+    </ModalProvider>
   );
 }
 

@@ -1,5 +1,8 @@
 /** @jsxImportSource @emotion/react */
+import { useContext } from "react";
 import ButtonBase from "../ButtonBase";
+
+import { ModalContext } from "../../util/context";
 
 import { ACCENTS } from "../../util/data";
 import { setChar } from "../../util/text";
@@ -35,7 +38,11 @@ const Button = ({ accent, shortcut, targetEl }) => {
   );
 };
 
-const Accents = ({ keyPressed, targetEl }) => {
+const Accents = () => {
+  const state = useContext(ModalContext);
+
+  const { targetEl, key } = state;
+
   return (
     <div
       css={{
@@ -45,14 +52,15 @@ const Accents = ({ keyPressed, targetEl }) => {
         zIndex: 1,
       }}
     >
-      {ACCENTS[keyPressed].map((accent, i) => (
-        <Button
-          key={`accent-button-${i}`}
-          targetEl={targetEl}
-          accent={accent}
-          shortcut={i + 1}
-        />
-      ))}
+      {key &&
+        ACCENTS[key].map((accent, i) => (
+          <Button
+            key={`accent-button-${i}`}
+            targetEl={targetEl}
+            accent={accent}
+            shortcut={i + 1}
+          />
+        ))}
     </div>
   );
 };
