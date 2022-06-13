@@ -9,7 +9,11 @@ import EventListener from "./components/events";
 import "./App.css";
 
 function App() {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState({
+    display: false,
+    key: null,
+    targetEl: null,
+  });
 
   const keyMap = {
     HIDE: ["esc", "backspace"],
@@ -26,7 +30,7 @@ function App() {
           <Popup show={show} />
           <textarea rows="10" />
         </div>
-        <div id="bg"></div>
+        <div id="bg" />
       </EventListener>
     </GlobalHotKeys>
   );

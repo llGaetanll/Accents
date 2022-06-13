@@ -13,9 +13,12 @@ const textItem = {
   fontFamily: "Inter, sans-serif",
 };
 
-const Button = ({ accent, shortcut }) => {
+const Button = ({ accent, shortcut, targetEl }) => {
+  const handleType = () => {};
+
   return (
     <motion.button
+      onClick={handleType}
       whileTap={{ scale: 0.95 }}
       css={{
         display: "flex",
@@ -39,7 +42,7 @@ const Button = ({ accent, shortcut }) => {
   );
 };
 
-const Accents = ({ keyPressed }) => {
+const Accents = ({ keyPressed, targetEl }) => {
   return (
     <div
       css={{
@@ -50,7 +53,12 @@ const Accents = ({ keyPressed }) => {
       }}
     >
       {ACCENTS[keyPressed].map((accent, i) => (
-        <Button key={`accent-button-${i}`} accent={accent} shortcut={i + 1} />
+        <Button
+          key={`accent-button-${i}`}
+          targetEl={targetEl}
+          accent={accent}
+          shortcut={i + 1}
+        />
       ))}
     </div>
   );
