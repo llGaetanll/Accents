@@ -2,6 +2,7 @@
 
 - screen for accents
 - screen for emojis
+  - emojis could be inserted into text areas using `:emoji-names:` kinda like discord
 - screen for inserting latex
 
 ## Caret Resources
