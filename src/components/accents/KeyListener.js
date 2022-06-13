@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from "react";
 
-import { useAsyncReducer } from "../../util";
+import { useAsyncReducer } from "../../util/index";
+import { getTextAreaCaret } from "../../util/caret";
 import { ACCENTS } from "../../util/data";
 
 // the default state of our async reducer
@@ -10,7 +11,7 @@ const defState = {
 };
 
 // number of miliseconds required to press down key before modal is displayed
-const MIN_PRESS_MS = 500;
+const MIN_PRESS_MS = 700;
 
 const keybindReducer = (state, { type, event }) => {
   switch (type) {
@@ -61,7 +62,17 @@ const KeyListener = ({ children, setShow }) => {
   // this runs when the timeout has passed and
   // the modal is about to be displayed
   const displayModal = useCallback(
-    (key, targetEl) => setShow({ display: true, targetEl, key }),
+    (key, targetEl) => {
+      // get the (x, y) position of the caret from the target element
+      const [x, y] = getTextAreaCaret(targetEl);
+
+      // const tracker = document.getElementById("caret-tracker");
+      // tracker.style.top = y + "px";
+      // tracker.style.left = x + "px";
+
+      // modal may need target element for inserting characters at the correct index
+      setShow({ display: true, targetEl, key, pos: { x, y } });
+    },
     [setShow]
   );
 

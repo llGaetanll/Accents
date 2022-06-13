@@ -8,19 +8,22 @@ import KeyListener from "./components/accents/KeyListener";
 
 import "./App.css";
 
+const defState = {
+  display: false,
+  key: null,
+  targetEl: null,
+  pos: null,
+};
+
 function App() {
-  const [show, setShow] = useState({
-    display: false,
-    key: null,
-    targetEl: null,
-  });
+  const [show, setShow] = useState(defState);
 
   const keyMap = {
     HIDE: ["esc", "backspace"],
   };
 
   const handlers = {
-    HIDE: () => setShow((s) => ({ display: false, key: null })),
+    HIDE: () => setShow((s) => defState),
   };
 
   return (
@@ -29,7 +32,7 @@ function App() {
         <div style={{ display: "flex", flexDirection: "column", width: 300 }}>
           <Modal show={show} />
           <textarea rows="10" />
-          <div id="caret-tracker" style={{ zIndex: 2 }} />
+          {/* <div id="caret-tracker" style={{ zIndex: 2 }} /> */}
         </div>
         <div id="bg" />
       </KeyListener>

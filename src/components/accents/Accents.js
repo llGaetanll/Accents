@@ -2,7 +2,9 @@
 import ButtonBase from "../ButtonBase";
 
 import { ACCENTS } from "../../util/data";
-import { getTextAreaCaret } from "../../util/caret";
+import { setChar } from "../../util/text";
+
+import { GAP_SIZE } from "../../util/const";
 
 const textItem = {
   display: "flex",
@@ -15,14 +17,12 @@ const textItem = {
 };
 
 const Button = ({ accent, shortcut, targetEl }) => {
-  const handleType = () => {
-    const [x, y] = getTextAreaCaret(targetEl);
+  const handleType = async () => {
+    // type in the character
+    setChar(targetEl, accent);
 
-    console.log(`caret pos: (x: ${x}, y: ${y})`);
-
-    const tracker = document.getElementById("caret-tracker");
-    tracker.style.top = y + "px";
-    tracker.style.left = x + "px";
+    // TODO: hide the modal...
+    // add redux to manage global state
   };
 
   return (
@@ -40,8 +40,8 @@ const Accents = ({ keyPressed, targetEl }) => {
     <div
       css={{
         display: "inline-flex",
-        gap: 7,
-        padding: 7,
+        gap: GAP_SIZE,
+        padding: GAP_SIZE,
         zIndex: 1,
       }}
     >
