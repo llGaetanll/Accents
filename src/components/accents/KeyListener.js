@@ -53,7 +53,7 @@ const keybindReducer = (state, { type, event }) => {
 };
 
 const KeyListener = ({ children, setShow }) => {
-  const { show } = useContext(ModalContext);
+  const { display, hide, show } = useContext(ModalContext);
 
   const [keybindState, dispatchKeybind] = useAsyncReducer(
     keybindReducer,
@@ -83,24 +83,28 @@ const KeyListener = ({ children, setShow }) => {
   const keyDownHandler = useCallback(
     ({ key, targetEl }) =>
       (dispatchKeybind, getState) => {
-        // check if the key is "accentable"
-        // if so, start a timeout that resolves to `displayModal`
-        if (key in ACCENTS)
-          return dispatchKeybind([
-            {
-              type: "START_TIMEOUT",
-              event: {
-                time: MIN_PRESS_MS,
-                timeoutCallback: () => {
-                  clearTimeout(getState().timeout);
+        if (display) {
+          hide();
+        } else {
+          // check if the key is "accentable"
+          // if so, start a timeout that resolves to `displayModal`
+          if (key in ACCENTS)
+            return dispatchKeybind([
+              {
+                type: "START_TIMEOUT",
+                event: {
+                  time: MIN_PRESS_MS,
+                  timeoutCallback: () => {
+                    clearTimeout(getState().timeout);
 
-                  displayModal(key, targetEl);
+                    displayModal(key, targetEl);
+                  },
                 },
               },
-            },
-          ]);
+            ]);
+        }
       },
-    [displayModal]
+    [display, hide, displayModal]
   );
 
   // removes any timeouts

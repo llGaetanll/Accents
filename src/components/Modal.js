@@ -9,6 +9,8 @@ import { ModalContext } from "../util/context";
 import KeyListener from "./accents/KeyListener";
 import Accents from "./accents/Accents";
 
+import { keyMap, handlers } from "../util/hotkeys";
+
 /* styling constants */
 import {
   MARGIN,
@@ -67,15 +69,7 @@ const right = (color, y) => ({
 });
 
 const Modal = () => {
-  const { display, pos, hide } = useContext(ModalContext);
-
-  const keyMap = {
-    HIDE: ["esc", "backspace"],
-  };
-
-  const handlers = {
-    HIDE: () => hide(),
-  };
+  const { display, pos } = useContext(ModalContext);
 
   const getRelativePos = () => {
     const y = pos.y - (KEY_HEIGHT + 2 * GAP_SIZE + 2 * MARGIN);

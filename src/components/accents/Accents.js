@@ -20,12 +20,13 @@ const textItem = {
 };
 
 const Button = ({ accent, shortcut, targetEl }) => {
+  const { hide } = useContext(ModalContext);
+
   const handleType = async () => {
     // type in the character
     setChar(targetEl, accent);
 
-    // TODO: hide the modal...
-    // add redux to manage global state
+    hide();
   };
 
   return (
