@@ -40,8 +40,8 @@
 #caret-tracker {
   position: fixed;
 
-  width: 5px;
-  height: 5px;
+  width: 1px;
+  height: 10px;
 
   background: red;
 }
