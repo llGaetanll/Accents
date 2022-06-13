@@ -53,15 +53,14 @@ const Accents = () => {
         zIndex: 1,
       }}
     >
-      {key &&
-        ACCENTS[key].map((accent, i) => (
-          <Button
-            key={`accent-button-${i}`}
-            targetEl={targetEl}
-            accent={accent}
-            shortcut={i + 1}
-          />
-        ))}
+      {ACCENTS[key].map((accent, i) => (
+        <Button
+          key={`accent-button-${i}`}
+          targetEl={targetEl}
+          accent={accent}
+          shortcut={i + 1}
+        />
+      ))}
     </div>
   );
 };

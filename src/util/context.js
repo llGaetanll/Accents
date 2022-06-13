@@ -24,7 +24,7 @@ const modalReducer = (state, { type, payload }) => {
       return { ...state, ...payload };
     }
     case "HIDE": {
-      return defState;
+      return { ...state, display: false };
     }
     default: {
       return state;
