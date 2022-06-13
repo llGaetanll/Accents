@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from "react";
 
-import { useAsyncReducer } from "../util";
-import { ACCENTS } from "../util/data";
+import { useAsyncReducer } from "../../util";
+import { ACCENTS } from "../../util/data";
 
 // the default state of our async reducer
 const defState = {
@@ -50,7 +50,7 @@ const keybindReducer = (state, { type, event }) => {
   }
 };
 
-const EventListener = ({ children, setShow }) => {
+const KeyListener = ({ children, setShow }) => {
   const [keybindState, dispatchKeybind] = useAsyncReducer(
     keybindReducer,
     defState
@@ -148,4 +148,4 @@ const EventListener = ({ children, setShow }) => {
   return children;
 };
 
-export default EventListener;
+export default KeyListener;

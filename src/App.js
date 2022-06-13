@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { GlobalHotKeys } from "react-hotkeys";
 
-import Popup from "./components/popup";
-import EventListener from "./components/events";
+import Modal from "./components/Modal";
+import KeyListener from "./components/accents/KeyListener";
 
 // import { keyMap, handlers } from "./util/hotkeys";
 
@@ -25,13 +25,13 @@ function App() {
 
   return (
     <GlobalHotKeys keyMap={keyMap} handlers={handlers}>
-      <EventListener setShow={setShow}>
+      <KeyListener setShow={setShow}>
         <div style={{ display: "flex", flexDirection: "column", width: 300 }}>
-          <Popup show={show} />
+          <Modal show={show} />
           <textarea rows="10" />
         </div>
         <div id="bg" />
-      </EventListener>
+      </KeyListener>
     </GlobalHotKeys>
   );
 }

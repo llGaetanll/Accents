@@ -3,9 +3,9 @@
 // see: https://github.com/emotion-js/emotion/issues/2752
 import { AnimatePresence, motion } from "framer-motion";
 
-import Accents from "./accents";
+import Accents from "./accents/Accents";
 
-const Popup = ({ show }) => {
+const Modal = ({ show }) => {
   const { display, key } = show;
 
   console.log(show.targetEl);
@@ -51,4 +51,4 @@ const Popup = ({ show }) => {
   );
 };
 
-export default Popup;
+export default Modal;

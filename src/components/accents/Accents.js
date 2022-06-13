@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import { motion } from "framer-motion";
+import ButtonBase from "../ButtonBase";
 
-import { ACCENTS } from "../util/data";
+import { ACCENTS } from "../../util/data";
 
 const textItem = {
   display: "flex",
@@ -17,28 +17,12 @@ const Button = ({ accent, shortcut, targetEl }) => {
   const handleType = () => {};
 
   return (
-    <motion.button
-      onClick={handleType}
-      whileTap={{ scale: 0.95 }}
-      css={{
-        display: "flex",
-        flexDirection: "column",
-
-        width: 37,
-        height: 48,
-
-        cursor: "pointer",
-        border: 0,
-        padding: 0,
-        borderRadius: 7,
-        background: "white",
-      }}
-    >
+    <ButtonBase onClick={handleType}>
       <h1 css={[textItem, { flex: 4, fontSize: "1.5em" }]}>{accent}</h1>
       <h2 css={[textItem, { flex: 3, color: "#494f5a", fontSize: "1.1em" }]}>
         {shortcut}
       </h2>
-    </motion.button>
+    </ButtonBase>
   );
 };
 
