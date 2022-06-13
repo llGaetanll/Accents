@@ -1,9 +1,9 @@
 import { useEffect, useCallback } from "react";
-import getCaretCoordinates from "textarea-caret";
 
 import { useAsyncReducer } from "../util";
 import { ACCENTS } from "../util/data";
 
+// the default state of our async reducer
 const defState = {
   keyPresses: [],
   timeout: null,
@@ -58,8 +58,46 @@ const EventListener = ({ children, setShow }) => {
 
   const { keyPresses } = keybindState;
 
-  // useCallback to prevent unecessary useEffect calls
-  // handleDetectKeyUp is called whenever a keyUp is detected
+  // this runs when the timeout has passed and
+  // the modal is about to be displayed
+  const displayModal = useCallback(
+    (key, targetEl) => setShow({ display: true, targetEl, key }),
+    [setShow]
+  );
+
+  // called whenever presses a key
+  const keyDownHandler = useCallback(
+    ({ key, targetEl }) =>
+      (dispatchKeybind, getState) => {
+        // check if the key is "accentable"
+        // if so, start a timeout that resolves to `displayModal`
+        if (key in ACCENTS)
+          return dispatchKeybind([
+            {
+              type: "START_TIMEOUT",
+              event: {
+                time: MIN_PRESS_MS,
+                timeoutCallback: () => {
+                  clearTimeout(getState().timeout);
+
+                  displayModal(key, targetEl);
+                },
+              },
+            },
+          ]);
+      },
+    [displayModal]
+  );
+
+  // removes any timeouts
+  const keyUpHandler =
+    ({ key }) =>
+    (dispatchKeybind, getState) => {
+      return dispatchKeybind({ type: "RESET_TIMEOUT" });
+    };
+
+  // called whenever a keyUp is detected
+  // it calls keyUphandler and removes the given keypress
   const handleAddKeyUp = useCallback(
     ({ key, timeStamp }) => {
       dispatchKeybind([
@@ -71,10 +109,10 @@ const EventListener = ({ children, setShow }) => {
   );
 
   // called whenever a keyDown is detected
-  // it calls keyDownHandler which handles any further logic
+  // it adds the given keypress and calls keyDownHandler which handles any further logic
   const handleAddKeyDown = useCallback(
     (event) => {
-      const { key, timeStamp } = event;
+      const { key, timeStamp, target } = event;
 
       // if we were already pressing the current key, don't record it
       if (keyPresses.findIndex((kp) => kp.key === key) >= 0) {
@@ -87,10 +125,10 @@ const EventListener = ({ children, setShow }) => {
       // add key to keyPresses and call handler with newest state
       dispatchKeybind([
         { type: "ADD_KEYPRESS", event: { key, timeStamp } },
-        keyDownHandler({ key, timeStamp }),
+        keyDownHandler({ key, targetEl: target }),
       ]);
     },
-    [keyPresses, dispatchKeybind]
+    [keyPresses, dispatchKeybind, keyDownHandler]
   );
 
   // create keyboard event listeners on mount
@@ -106,41 +144,6 @@ const EventListener = ({ children, setShow }) => {
       window.removeEventListener("keyup", handleAddKeyUp);
     };
   }, [handleAddKeyDown, handleAddKeyUp]);
-
-  // this runs when the timeout has passed and
-  // the modal is about to be displayed
-  const displayModal = (key) => {
-    console.log("show modal");
-    setShow({ display: true, key });
-  };
-
-  const keyDownHandler =
-    ({ key, timeStamp }) =>
-    (dispatchKeybind, getState) => {
-      if (key in ACCENTS) {
-        console.log("detected useful key", key);
-
-        return dispatchKeybind([
-          {
-            type: "START_TIMEOUT",
-            event: {
-              time: MIN_PRESS_MS,
-              timeoutCallback: () => {
-                clearTimeout(getState().timeout);
-
-                displayModal(key);
-              },
-            },
-          },
-        ]);
-      }
-    };
-
-  const keyUpHandler =
-    ({ key }) =>
-    (dispatchKeybind, getState) => {
-      return dispatchKeybind({ type: "RESET_TIMEOUT" });
-    };
 
   return children;
 };
