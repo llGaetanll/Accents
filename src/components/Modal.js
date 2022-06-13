@@ -8,8 +8,6 @@ import Accents from "./accents/Accents";
 const Modal = ({ show }) => {
   const { display, key } = show;
 
-  console.log(show.targetEl);
-
   return (
     <AnimatePresence>
       {display && (

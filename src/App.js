@@ -29,6 +29,7 @@ function App() {
         <div style={{ display: "flex", flexDirection: "column", width: 300 }}>
           <Modal show={show} />
           <textarea rows="10" />
+          <div id="caret-tracker" style={{ zIndex: 2 }} />
         </div>
         <div id="bg" />
       </KeyListener>

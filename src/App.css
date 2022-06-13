@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+#caret-tracker {
+  position: fixed;
+
+  width: 5px;
+  height: 5px;
+
+  background: red;
+}

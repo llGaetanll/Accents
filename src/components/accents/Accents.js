@@ -2,6 +2,7 @@
 import ButtonBase from "../ButtonBase";
 
 import { ACCENTS } from "../../util/data";
+import { getTextAreaCaret } from "../../util/caret";
 
 const textItem = {
   display: "flex",
@@ -14,7 +15,15 @@ const textItem = {
 };
 
 const Button = ({ accent, shortcut, targetEl }) => {
-  const handleType = () => {};
+  const handleType = () => {
+    const [x, y] = getTextAreaCaret(targetEl);
+
+    console.log(`caret pos: (x: ${x}, y: ${y})`);
+
+    const tracker = document.getElementById("caret-tracker");
+    tracker.style.top = y + "px";
+    tracker.style.left = x + "px";
+  };
 
   return (
     <ButtonBase onClick={handleType}>
