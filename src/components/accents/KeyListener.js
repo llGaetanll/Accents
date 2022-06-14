@@ -2,7 +2,6 @@ import { useEffect, useCallback, useContext } from "react";
 
 import { ModalContext } from "../../util/context";
 import { useAsyncReducer } from "../../util/index";
-import { getTextAreaCaret } from "../../util/caret";
 import { ACCENTS } from "../../util/data";
 import { setChar } from "../../util/text";
 
@@ -84,17 +83,7 @@ const KeyListener = ({ children, setShow }) => {
   // this runs when the timeout has passed and
   // the modal is about to be displayed
   const displayModal = useCallback(
-    (key, targetEl) => {
-      // get the (x, y) position of the caret from the target element
-      const [x, y] = getTextAreaCaret(targetEl);
-
-      // const tracker = document.getElementById("caret-tracker");
-      // tracker.style.top = y + "px";
-      // tracker.style.left = x + "px";
-
-      // modal may need target element for inserting characters at the correct index
-      show({ display: true, targetEl, key, pos: { x, y } });
-    },
+    (key, targetEl) => show({ display: true, targetEl, key }),
     [show]
   );
 

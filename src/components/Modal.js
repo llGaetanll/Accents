@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 // custom pragma necessary on CRA
 // see: https://github.com/emotion-js/emotion/issues/2752
-import { useContext, useState, useRef } from "react";
+import { useContext, useState } from "react";
 import { usePopper } from "react-popper";
 import { AnimatePresence, motion } from "framer-motion";
 import { GlobalHotKeys } from "react-hotkeys";
@@ -22,17 +22,14 @@ import {
 } from "../util/const";
 
 const Modal = () => {
-  const { display, hide, targetEl } = useContext(ModalContext);
+  const { display, hide, caretPtr } = useContext(ModalContext);
 
   const handleClose = () => hide();
-
-  // const popperEl = useRef();
-  // const arrowEl = useRef();
 
   const [popperEl, setPopperElement] = useState(null);
   const [arrowEl, setArrowElement] = useState(null);
 
-  const { styles, attributes } = usePopper(targetEl, popperEl, {
+  const { styles, attributes } = usePopper(caretPtr, popperEl, {
     placement: "top",
     modifiers: [{ name: "arrow", options: { element: arrowEl } }],
   });
@@ -72,12 +69,13 @@ const Modal = () => {
                       css={[
                         {
                           opacity: OPACITY,
+                          // width: 5,
+                          // height: 5,
+                          // transform: "rotate(45deg)",
+                          // background: "green",
                         },
                         placement === "top" && {
                           bottom: -POINTER_SIZE,
-
-                          marginLeft: BORDER_RADIUS,
-                          marginRight: BORDER_RADIUS,
 
                           borderTop: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
                           borderLeft: `${POINTER_SIZE}px solid transparent`,
@@ -86,9 +84,6 @@ const Modal = () => {
                         placement === "bottom" && {
                           top: -POINTER_SIZE,
 
-                          marginLeft: BORDER_RADIUS,
-                          marginRight: BORDER_RADIUS,
-
                           borderBottom: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
                           borderLeft: `${POINTER_SIZE}px solid transparent`,
                           borderRight: `${POINTER_SIZE}px solid transparent`,
@@ -96,18 +91,12 @@ const Modal = () => {
                         placement === "left" && {
                           right: -POINTER_SIZE,
 
-                          marginTop: BORDER_RADIUS,
-                          marginBottom: BORDER_RADIUS,
-
                           borderLeft: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
                           borderTop: `${POINTER_SIZE}px solid transparent`,
                           borderBottom: `${POINTER_SIZE}px solid transparent`,
                         },
                         placement === "right" && {
                           left: -POINTER_SIZE,
-
-                          marginTop: BORDER_RADIUS,
-                          marginBottom: BORDER_RADIUS,
 
                           borderRight: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
                           borderTop: `${POINTER_SIZE}px solid transparent`,

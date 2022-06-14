@@ -1,5 +1,7 @@
 import { createContext, useReducer } from "react";
 
+import { getTextAreaCaret } from "./caret";
+
 const defState = {
   display: false,
   key: null,
@@ -7,11 +9,34 @@ const defState = {
   pos: null,
 };
 
+const POINTER_ID = "accents-caret-ptr";
+
 const modalActions = (dispatch) => ({
   show: (payload) => {
-    dispatch({ type: "SHOW", payload });
+    const { targetEl } = payload;
+    // get caret position from textbox element
+    const [x, y] = getTextAreaCaret(targetEl);
+
+    // since the position of the anchor is computed from the end of the letter,
+    // this number is an estimate for half of the length of a character
+    const OFFSET = 4;
+
+    // create an element that we can give as an anchor to react popper
+    const caretPtr = document.createElement("span");
+    caretPtr.id = POINTER_ID;
+    caretPtr.style.position = "fixed";
+    caretPtr.style.top = y + "px";
+    caretPtr.style.left = x - OFFSET + "px";
+
+    // add element as sibbling
+    targetEl.parentNode.insertBefore(caretPtr, targetEl.nextSibling);
+
+    dispatch({ type: "SHOW", payload: { ...payload, caretPtr } });
   },
   hide: () => {
+    // remove the anchor
+    document.getElementById(POINTER_ID).remove();
+
     dispatch({ type: "HIDE" });
   },
 });
