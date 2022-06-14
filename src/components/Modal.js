@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 // custom pragma necessary on CRA
 // see: https://github.com/emotion-js/emotion/issues/2752
-import { useContext } from "react";
+import { useContext, useState, useRef } from "react";
+import { usePopper } from "react-popper";
 import { AnimatePresence, motion } from "framer-motion";
 import { GlobalHotKeys } from "react-hotkeys";
 import { ModalContext } from "../util/context";
@@ -16,126 +17,133 @@ import {
   MARGIN,
   BACKGROUND_COLOR,
   POINTER_SIZE,
-  GAP_SIZE,
-  KEY_WIDTH,
-  KEY_HEIGHT,
   BORDER_RADIUS,
   OPACITY,
 } from "../util/const";
 
-// define some styles for pointers
-const triangle = {
-  position: "absolute",
-  boxSizing: "border-box",
-
-  width: POINTER_SIZE,
-  height: POINTER_SIZE,
-};
-
-const up = (color, x) => ({
-  top: -POINTER_SIZE,
-  left: x,
-
-  borderBottom: `${POINTER_SIZE}px solid ${color}`,
-  borderLeft: `${POINTER_SIZE}px solid transparent`,
-  borderRight: `${POINTER_SIZE}px solid transparent`,
-});
-
-const down = (color, x) => ({
-  bottom: -POINTER_SIZE,
-  left: x,
-
-  borderTop: `${POINTER_SIZE}px solid ${color}`,
-  borderLeft: `${POINTER_SIZE}px solid transparent`,
-  borderRight: `${POINTER_SIZE}px solid transparent`,
-});
-
-const left = (color, y) => ({
-  left: -POINTER_SIZE,
-  top: y,
-
-  borderRight: `${POINTER_SIZE}px solid ${color}`,
-  borderTop: `${POINTER_SIZE}px solid transparent`,
-  borderBottom: `${POINTER_SIZE}px solid transparent`,
-});
-
-const right = (color, y) => ({
-  right: -POINTER_SIZE,
-  top: y,
-
-  borderLeft: `${POINTER_SIZE}px solid ${color}`,
-  borderTop: `${POINTER_SIZE}px solid transparent`,
-  borderBottom: `${POINTER_SIZE}px solid transparent`,
-});
-
 const Modal = () => {
-  const { display, pos } = useContext(ModalContext);
+  const { display, hide, targetEl } = useContext(ModalContext);
 
-  const getRelativePos = () => {
-    const y = pos.y - (KEY_HEIGHT + 2 * GAP_SIZE + 2 * MARGIN);
-    const x = pos.x - (MARGIN + GAP_SIZE + KEY_WIDTH / 2);
+  const handleClose = () => hide();
 
-    return {
-      top: y,
-      left: x,
-    };
-  };
+  // const popperEl = useRef();
+  // const arrowEl = useRef();
+
+  const [popperEl, setPopperElement] = useState(null);
+  const [arrowEl, setArrowElement] = useState(null);
+
+  const { styles, attributes } = usePopper(targetEl, popperEl, {
+    placement: "top",
+    modifiers: [{ name: "arrow", options: { element: arrowEl } }],
+  });
+
+  const placement = attributes?.popper?.["data-popper-placement"];
 
   return (
     <GlobalHotKeys keyMap={keyMap} handlers={handlers}>
       <KeyListener>
         <AnimatePresence>
           {display && (
-            <div
-              css={[
-                { position: "fixed" },
-                pos ? getRelativePos() : { top: 0, left: 0 },
-              ]}
-            >
-              <motion.div
-                initial={{ y: -5, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 5, opacity: 0 }}
+            <>
+              <div
+                ref={setPopperElement}
+                {...attributes.popper}
+                style={styles.popper}
+                css={[styles.popper, { zIndex: 11 }]}
               >
-                <div
-                  css={{
-                    display: "inline-flex",
-
-                    margin: MARGIN,
-                    borderRadius: BORDER_RADIUS,
-
-                    position: "relative",
-                  }}
+                <motion.div
+                  initial={{ y: -5, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 5, opacity: 0 }}
                 >
-                  <Accents />
                   <div
                     css={{
-                      position: "absolute",
-                      borderRadius: "inherit",
+                      display: "inline-flex",
 
-                      width: "100%",
-                      height: "100%",
+                      margin: MARGIN,
+                      borderRadius: BORDER_RADIUS,
 
-                      opacity: OPACITY,
-                      background: BACKGROUND_COLOR,
-                      // backdropFilter: "blur(20px)", // tricky in FF still
+                      position: "relative",
                     }}
                   >
-                    {pos && (
-                      <div
-                        css={[
-                          triangle,
-                          down(
-                            BACKGROUND_COLOR,
-                            GAP_SIZE + KEY_WIDTH / 2 - POINTER_SIZE
-                          ),
-                        ]}
-                      />
-                    )}
+                    <Accents />
+                    <div
+                      ref={setArrowElement}
+                      css={[
+                        {
+                          opacity: OPACITY,
+                        },
+                        placement === "top" && {
+                          bottom: -POINTER_SIZE,
+
+                          marginLeft: BORDER_RADIUS,
+                          marginRight: BORDER_RADIUS,
+
+                          borderTop: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
+                          borderLeft: `${POINTER_SIZE}px solid transparent`,
+                          borderRight: `${POINTER_SIZE}px solid transparent`,
+                        },
+                        placement === "bottom" && {
+                          top: -POINTER_SIZE,
+
+                          marginLeft: BORDER_RADIUS,
+                          marginRight: BORDER_RADIUS,
+
+                          borderBottom: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
+                          borderLeft: `${POINTER_SIZE}px solid transparent`,
+                          borderRight: `${POINTER_SIZE}px solid transparent`,
+                        },
+                        placement === "left" && {
+                          right: -POINTER_SIZE,
+
+                          marginTop: BORDER_RADIUS,
+                          marginBottom: BORDER_RADIUS,
+
+                          borderLeft: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
+                          borderTop: `${POINTER_SIZE}px solid transparent`,
+                          borderBottom: `${POINTER_SIZE}px solid transparent`,
+                        },
+                        placement === "right" && {
+                          left: -POINTER_SIZE,
+
+                          marginTop: BORDER_RADIUS,
+                          marginBottom: BORDER_RADIUS,
+
+                          borderRight: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
+                          borderTop: `${POINTER_SIZE}px solid transparent`,
+                          borderBottom: `${POINTER_SIZE}px solid transparent`,
+                        },
+                        styles.arrow,
+                      ]}
+                    />
+                    <div
+                      css={{
+                        position: "absolute",
+                        borderRadius: "inherit",
+
+                        width: "100%",
+                        height: "100%",
+
+                        opacity: OPACITY,
+                        background: BACKGROUND_COLOR,
+
+                        // backdropFilter: "blur(20px)", // tricky in FF still
+                      }}
+                    />
                   </div>
-                </div>
-              </motion.div>
-            </div>
+                </motion.div>
+              </div>
+
+              <div
+                onClick={handleClose}
+                css={{
+                  position: "fixed",
+                  width: "100vw",
+                  height: "100vh",
+                  zIndex: 10,
+                }}
+              />
+            </>
           )}
         </AnimatePresence>
       </KeyListener>
