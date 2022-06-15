@@ -21,6 +21,28 @@ import {
   OPACITY,
 } from "../util/const";
 
+// arrow styles depending on orientation, handled by react popper
+const ARROW_STYLES = {
+  top: {
+    bottom: -POINTER_SIZE,
+  },
+  bottom: {
+    top: -POINTER_SIZE,
+
+    transform: "rotate(180deg)",
+  },
+  left: {
+    right: -POINTER_SIZE,
+
+    transform: "rotate(90deg)",
+  },
+  right: {
+    left: -POINTER_SIZE,
+
+    transform: "rotate(-90deg)",
+  },
+};
+
 const Modal = () => {
   const { display, hide, caretPtr } = useContext(ModalContext);
 
@@ -31,7 +53,15 @@ const Modal = () => {
 
   const { styles, attributes } = usePopper(caretPtr, popperEl, {
     placement: "top",
-    modifiers: [{ name: "arrow", options: { element: arrowEl } }],
+    modifiers: [
+      {
+        name: "arrow",
+        options: {
+          element: arrowEl,
+          padding: BORDER_RADIUS,
+        },
+      },
+    ],
   });
 
   const placement = attributes?.popper?.["data-popper-placement"];
@@ -67,42 +97,15 @@ const Modal = () => {
                     <div
                       ref={setArrowElement}
                       css={[
+                        styles.arrow,
                         {
                           opacity: OPACITY,
-                          // width: 5,
-                          // height: 5,
-                          // transform: "rotate(45deg)",
-                          // background: "green",
-                        },
-                        placement === "top" && {
-                          bottom: -POINTER_SIZE,
 
                           borderTop: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
                           borderLeft: `${POINTER_SIZE}px solid transparent`,
                           borderRight: `${POINTER_SIZE}px solid transparent`,
                         },
-                        placement === "bottom" && {
-                          top: -POINTER_SIZE,
-
-                          borderBottom: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
-                          borderLeft: `${POINTER_SIZE}px solid transparent`,
-                          borderRight: `${POINTER_SIZE}px solid transparent`,
-                        },
-                        placement === "left" && {
-                          right: -POINTER_SIZE,
-
-                          borderLeft: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
-                          borderTop: `${POINTER_SIZE}px solid transparent`,
-                          borderBottom: `${POINTER_SIZE}px solid transparent`,
-                        },
-                        placement === "right" && {
-                          left: -POINTER_SIZE,
-
-                          borderRight: `${POINTER_SIZE}px solid ${BACKGROUND_COLOR}`,
-                          borderTop: `${POINTER_SIZE}px solid transparent`,
-                          borderBottom: `${POINTER_SIZE}px solid transparent`,
-                        },
-                        styles.arrow,
+                        ARROW_STYLES[placement],
                       ]}
                     />
                     <div
