@@ -3,6 +3,7 @@ const TestLayout = () => {
     <>
       <div style={{ display: "flex", flexDirection: "column", width: 300 }}>
         <textarea rows="10" />
+        <input type="text" />
 
         <textarea style={{ position: "fixed", top: 0, left: 0 }} rows="1" />
 

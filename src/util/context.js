@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "react";
 
-import { getTextAreaCaret } from "./caret";
+import { getCaret } from "./caret";
 
 const defState = {
   display: false,
@@ -14,8 +14,9 @@ const POINTER_ID = "accents-caret-ptr";
 const modalActions = (dispatch) => ({
   show: (payload) => {
     const { targetEl } = payload;
-    // get caret position from textbox element
-    const [x, y] = getTextAreaCaret(targetEl);
+
+    // get caret position from field
+    const [x, y] = getCaret(targetEl);
 
     // since the position of the anchor is computed from the end of the letter,
     // this number is an estimate for half of the length of a character

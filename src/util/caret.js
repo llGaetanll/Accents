@@ -1,5 +1,5 @@
 /* returns the x, y position of the caret, given the target element (which is a
- * textarea)
+ * textarea or an input)
  *
  * This solution largely comes from this post
  * https://stackoverflow.com/a/16561663
@@ -10,54 +10,47 @@
  * google docs or online text editors. For such websites, an adhoc solution may
  * be necessary.
  */
-export const getTextAreaCaret = (textarea) => {
+export const getCaret = (field) => {
   // simple wrapper for adding elements to the DOM
-  const createElement = (type, parent, id) => {
+  const createElement = (type, parent) => {
     var el = document.createElement(type);
     parent.appendChild(el);
-    el.id = id;
     return el;
   };
 
-  const parent = textarea.parentElement;
+  const parent = field.parentElement;
 
   // create an invisible text area above the current one, with the same css properties
-  const textareaMirror = createElement(
-    "div",
-    parent,
-    "accents-textarea-mirror"
-  );
-  const textareaMirrorInline = createElement("span", textareaMirror, "");
+  const fieldMirror = createElement("div", parent);
+  const fieldMirrorInline = createElement("span", fieldMirror);
 
   // the new textarea must have the same styles to be able to track the caret correctly
-  const styles = window.getComputedStyle(textarea);
+  const styles = window.getComputedStyle(field);
   Array.from(styles).forEach((key) =>
-    textareaMirror.style.setProperty(
+    fieldMirror.style.setProperty(
       key,
       styles.getPropertyValue(key),
       styles.getPropertyPriority(key)
     )
   );
 
-  textareaMirror.style.position = "absolute";
-  // textareaMirror.style.zIndex = 1;
-  textareaMirror.style.opacity = 0;
+  fieldMirror.style.position = "absolute";
+  fieldMirror.style.top = field.offsetTop + "px";
+  fieldMirror.style.left = field.offsetLeft + "px";
+  fieldMirror.style.opacity = 0;
 
   // set the invisible textarea's text to that of the current text area
-  textareaMirrorInline.innerHTML = textarea.value.substr(
-    0,
-    textarea.selectionStart
-  );
+  fieldMirrorInline.innerHTML = field.value.substr(0, field.selectionStart);
 
-  const rects = textareaMirrorInline.getClientRects();
+  const rects = fieldMirrorInline.getClientRects();
   const lastRect = rects[rects.length - 1];
 
   const x = lastRect.x + lastRect.width;
   const y = lastRect.y; // height is taken to be the top
 
   // now that we have the coordinates, delete the extra elements we created
-  textareaMirror.remove();
-  textareaMirrorInline.remove();
+  fieldMirror.remove();
+  fieldMirrorInline.remove();
 
   return [x, y];
 };
