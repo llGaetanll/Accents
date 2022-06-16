@@ -7,7 +7,7 @@ import { ModalContext } from "../../util/context";
 import { ACCENTS } from "../../util/data";
 import { setChar } from "../../util/text";
 
-import { GAP_SIZE } from "../../util/const";
+import { KEY_WIDTH, KEY_HEIGHT, GAP_SIZE } from "../../util/const";
 
 const textItem = {
   display: "flex",
@@ -59,6 +59,13 @@ const Accents = () => {
           targetEl={targetEl}
           accent={accent}
           shortcut={i + 1}
+          css={{
+            width: KEY_WIDTH,
+            height: KEY_HEIGHT,
+
+            margin: 0,
+            padding: 0,
+          }}
         />
       ))}
     </div>

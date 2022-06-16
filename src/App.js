@@ -3,6 +3,7 @@ import { ModalProvider } from "./util/context";
 
 import Modal from "./components/Modal";
 import TestLayout from "./TestLayout";
+import Menu from "./components/Menu";
 
 import store from "./store";
 
@@ -13,7 +14,16 @@ function App() {
     <ModalProvider>
       <StateProvider store={store}>
         <Modal />
-        <TestLayout />
+        <div
+          style={{
+            width: 300,
+            height: "auto",
+
+            border: "1px solid black",
+          }}
+        >
+          <Menu />
+        </div>
       </StateProvider>
     </ModalProvider>
   );

@@ -1,8 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { motion } from "framer-motion";
 
-import { KEY_WIDTH, KEY_HEIGHT } from "../util/const";
-
 /* This button base is shared by Accents and Emoji and acts as a virtual keyboard key */
 const ButtonBase = ({ children, ...props }) => {
   return (
@@ -12,12 +10,13 @@ const ButtonBase = ({ children, ...props }) => {
         display: "flex",
         flexDirection: "column",
 
-        width: KEY_WIDTH,
-        height: KEY_HEIGHT,
+        minWidth: 56,
+        minHeight: 32,
 
         cursor: "pointer",
         border: 0,
-        padding: 0,
+        margin: 4,
+        padding: 8,
         borderRadius: 7,
         background: "white",
       }}
