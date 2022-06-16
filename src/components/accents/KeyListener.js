@@ -58,7 +58,7 @@ const keybindReducer = (state, { type, event }) => {
   }
 };
 
-const keybindList = [
+const KEYBIND_LIST = [
   ...Object.keys(ACCENTS),
   ...[].concat.apply(
     [],
@@ -67,6 +67,18 @@ const keybindList = [
     )
   ),
 ];
+
+/* Given the list of keybinds pressed, returns the most recent valid combo, or null otherwise */
+const getKeyCombo = (keys) => {
+  for (let i = keys.length - 1; i >= 0; i--) {
+    const keybind = keys.slice(i);
+    const keybindStr = keybind.join("");
+
+    if (KEYBIND_LIST.indexOf(keybindStr) > -1) return keybind;
+  }
+
+  return null;
+};
 
 // console.log(keybindList);
 
@@ -89,24 +101,22 @@ const KeyListener = ({ children, setShow }) => {
 
   // called whenever presses a key
   const keyDownHandler = useCallback(
-    (event) => (dispatchKeybind, getState) => {
+    (event, accentKeybind) => (dispatchKeybind, getState) => {
       const { key, target: targetEl } = event;
-
-      const keybind = getState().keyPresses.map((kp) => kp.key);
-      const keybindStr = keybind.join("");
-
-      // console.log(keybind, keybindStr, keybindList.indexOf(keybindStr));
 
       // pressing any key hides the modal
       if (display) hide();
 
       // if the user is pressing a key combo that we care about
       // TODO: detect if only last or last two keys are good instead
-      if (keybindList.indexOf(keybindStr) > -1) {
+      if (accentKeybind) {
+        dispatchKeybind({ type: "RESET_TIMEOUT" });
+
+        // if (KEYBIND_LIST.indexOf(keybindStr) > -1) {
         // if we use the keyboard shortcut for typing in the accent,
         // type it in directly
-        if (keybind.length > 1) {
-          const [key, idx] = keybind;
+        if (accentKeybind.length > 1) {
+          const [key, idx] = accentKeybind;
           const char = ACCENTS[key][idx - 1];
 
           // type the key
@@ -128,18 +138,15 @@ const KeyListener = ({ children, setShow }) => {
         }
       }
 
+      // get a list of numbers the user can press when the modal is visible
       const numbers = ACCENTS[modalKey]?.map((_, i) => i);
 
       // check for when the modal is visible and user presses only a number
-      if (
-        display &&
-        !isNaN(keybindStr) &&
-        numbers.indexOf(Number(keybindStr) - 1) > -1
-      ) {
+      if (display && !isNaN(key) && numbers.indexOf(Number(key) - 1) > -1) {
         // prevent typing in the number
         event.preventDefault();
 
-        const char = ACCENTS[modalKey][Number(keybindStr) - 1];
+        const char = ACCENTS[modalKey][Number(key) - 1];
 
         // type the key
         setChar(targetEl, char);
@@ -186,7 +193,7 @@ const KeyListener = ({ children, setShow }) => {
 
       // include the current key
       const allKeybinds = seen ? prevKeybinds : [...prevKeybinds, key];
-      const keybindStr = allKeybinds.join("");
+      // const keybindStr = allKeybinds.join("");
 
       // only record keys we've not seen before
       if (!seen)
@@ -194,14 +201,15 @@ const KeyListener = ({ children, setShow }) => {
 
       // if the user is pressing a key combo that we care about
       // TODO: detect if only last or last two keys are good instead
-      const accentKeybind = keybindList.indexOf(keybindStr) > -1;
+      const accentKeybind = getKeyCombo(allKeybinds);
+      // const accentKeybind = KEYBIND_LIST.indexOf(keybindStr) > -1;
 
       // key combo must be valid, we prevent any numbers from being typed, or type only one letter character
-      if (accentKeybind && (keybindStr.length > 1 || seen))
+      if (accentKeybind && (accentKeybind.length > 1 || seen))
         event.preventDefault();
 
       // dont dispatch a new event if we've seen the key combo beforehand
-      if (!seen) dispatchKeybind(keyDownHandler(event));
+      if (!seen) dispatchKeybind(keyDownHandler(event, accentKeybind));
     },
     [keyPresses, dispatchKeybind, keyDownHandler]
   );
