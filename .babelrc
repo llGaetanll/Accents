@@ -1,0 +1,13 @@
+{
+  "presets": [
+    "@babel/preset-env", [
+      "@babel/preset-react",
+      {
+        // allows us to use emotion's css prop without the pragma at the top of each file
+        "runtime": "automatic",
+        "importSource": "@emotion/react"
+      }
+    ]
+  ],
+  "plugins": ["@emotion"]
+}

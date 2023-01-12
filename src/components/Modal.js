@@ -1,6 +1,3 @@
-/** @jsxImportSource @emotion/react */
-// custom pragma necessary on CRA
-// see: https://github.com/emotion-js/emotion/issues/2752
 import { useContext, useState } from "react";
 import { usePopper } from "react-popper";
 import { AnimatePresence, motion } from "framer-motion";
@@ -43,6 +40,12 @@ const ARROW_STYLES = {
   },
 };
 
+// our elements need to be above any other elements on the page.  there is no
+// set limit defined on the CSS <integer> type, but this should be some really
+// large number.
+const MODAL_Z_INDEX = 1_000_000;
+const BACKDROP_Z_INDEX = MODAL_Z_INDEX - 1;
+
 const Modal = () => {
   const { display, hide, caretPtr } = useContext(ModalContext);
 
@@ -76,7 +79,12 @@ const Modal = () => {
                 ref={setPopperElement}
                 {...attributes.popper}
                 style={styles.popper}
-                css={[styles.popper, { zIndex: 11 }]}
+                css={[
+                  styles.popper,
+                  {
+                    zIndex: MODAL_Z_INDEX,
+                  },
+                ]}
               >
                 <motion.div
                   initial={{ y: -5, opacity: 0 }}
@@ -132,7 +140,7 @@ const Modal = () => {
                   position: "fixed",
                   width: "100vw",
                   height: "100vh",
-                  zIndex: 10,
+                  zIndex: BACKDROP_Z_INDEX,
                 }}
               />
             </>

@@ -1,25 +1,29 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "icons": [
+  "manifest_version": 2,
+  "name": "Accents",
+  "version": "0.1",
+
+  "description": "Accents is a browser extension that brings accents to everyone.",
+
+  "icons": {
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+
+  "content_scripts": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["modal.bundle.js"]
     }
   ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+
+  "browser_action": {
+    "browser_style": true,
+    "default_icon": {
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    },
+    "default_title": "Accents",
+    "default_popup": "index.html"
+  }
 }

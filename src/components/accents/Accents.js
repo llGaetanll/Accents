@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { useContext } from "react";
 import ButtonBase from "../ButtonBase";
 
@@ -19,7 +18,7 @@ const textItem = {
   fontFamily: "Inter, sans-serif",
 };
 
-const Button = ({ accent, shortcut, targetEl }) => {
+const Button = ({ accent, shortcut, targetEl, ...props }) => {
   const { hide } = useContext(ModalContext);
 
   const handleType = async () => {
@@ -30,7 +29,7 @@ const Button = ({ accent, shortcut, targetEl }) => {
   };
 
   return (
-    <ButtonBase onClick={handleType}>
+    <ButtonBase onClick={handleType} {...props}>
       <h1 css={[textItem, { flex: 4, fontSize: "1.5em" }]}>{accent}</h1>
       <h2 css={[textItem, { flex: 3, color: "#494f5a", fontSize: "1.1em" }]}>
         {shortcut}

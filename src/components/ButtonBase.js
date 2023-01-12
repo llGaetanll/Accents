@@ -10,8 +10,8 @@ const ButtonBase = ({ children, ...props }) => {
         display: "flex",
         flexDirection: "column",
 
-        minWidth: 56,
-        minHeight: 32,
+        // minWidth: 56,
+        // minHeight: 32,
 
         cursor: "pointer",
         border: 0,
