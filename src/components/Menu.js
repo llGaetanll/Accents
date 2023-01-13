@@ -19,6 +19,8 @@ const Menu = () => {
     <div
       css={{
         display: "flex",
+        flexDirection: "column",
+
         width: "inherit",
         height: "inherit",
         boxSizing: "border-box",
