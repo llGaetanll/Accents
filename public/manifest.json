@@ -17,6 +17,10 @@
     }
   ],
 
+  "background": {
+    "scripts": ["background.bundle.js"]
+  },
+
   "browser_action": {
     "browser_style": true,
     "default_icon": {

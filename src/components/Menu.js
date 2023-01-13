@@ -1,17 +1,24 @@
-/** @jsxImportSource @emotion/react */
-import ButtonBase from "./ButtonBase";
+import { useDispatch } from "react-redux";
 
+import ButtonBase from "./ButtonBase";
 import { BACKGROUND_COLOR } from "../util/const";
+import { toggle } from "../state";
 
 const SiteToggle = () => {
   return <ButtonBase>test</ButtonBase>;
 };
 
 const Menu = () => {
+  const dispatch = useDispatch();
+
+  const handleToggle = () => {
+    dispatch(toggle());
+  };
+
   return (
     <div
       css={{
-        disply: "flex",
+        display: "flex",
         width: "inherit",
         height: "inherit",
         boxSizing: "border-box",
@@ -25,7 +32,7 @@ const Menu = () => {
       <div css={{ display: "flex", flexDirection: "row" }}>
         <ButtonBase>{window.location.href} toggle</ButtonBase>
 
-        <ButtonBase>on/off</ButtonBase>
+        <ButtonBase onClick={handleToggle}>on/off</ButtonBase>
       </div>
 
       {/* <h2>Mode</h2>

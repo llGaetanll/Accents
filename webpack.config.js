@@ -9,6 +9,9 @@ module.exports = {
 
     // bundle the modal, this is injected into the page to make the extension work
     modal: path.join(__dirname, "src", "modal.js"),
+
+    // bundle the background page, this page holds our redux store and our global state
+    background: path.join(__dirname, "src", "background.js"),
   },
   output: {
     // output everything to directory named build

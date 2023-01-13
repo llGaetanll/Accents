@@ -1,8 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  active: true,
+};
 
-const reducers = {};
+const reducers = {
+  toggle: (state, _) => {
+    state.active = !state.active;
+  },
+};
 
 const { reducer, actions } = createSlice({
   name: "accents/state",
@@ -10,5 +16,5 @@ const { reducer, actions } = createSlice({
   reducers,
 });
 
-export const { show, hide } = actions;
+export const { toggle } = actions;
 export const stateReducer = reducer;

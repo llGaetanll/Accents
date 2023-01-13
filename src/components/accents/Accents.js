@@ -21,10 +21,16 @@ const textItem = {
 const Button = ({ accent, shortcut, targetEl, ...props }) => {
   const { hide } = useContext(ModalContext);
 
-  const handleType = async () => {
+  const handleType = () => {
     // type in the character
     setChar(targetEl, accent);
 
+    // focus the textarea again
+    // TODO: this moves the user's caret to the end of the textarea
+    // keep track of where this is
+    targetEl.focus();
+
+    // hide the modal
     hide();
   };
 

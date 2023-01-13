@@ -11,12 +11,15 @@ const defState = {
 
 const POINTER_ID = "accents-caret-ptr";
 
+// to see the caret elements
+const DEBUG = false;
+
 const modalActions = (dispatch) => ({
   show: (payload) => {
     const { targetEl } = payload;
 
     // get caret position from field
-    const [x, y] = getCaret(targetEl);
+    const [x, y] = getCaret(targetEl, DEBUG);
 
     // since the position of the anchor is computed from the end of the letter,
     // this number is an estimate for half of the length of a character
@@ -28,6 +31,12 @@ const modalActions = (dispatch) => ({
     caretPtr.style.position = "fixed";
     caretPtr.style.top = y + "px";
     caretPtr.style.left = x - OFFSET + "px";
+
+    if (DEBUG) {
+      caretPtr.style.width = 1;
+      caretPtr.style.height = 10;
+      caretPtr.style.background = "red";
+    }
 
     // add element as sibbling
     targetEl.parentNode.insertBefore(caretPtr, targetEl.nextSibling);

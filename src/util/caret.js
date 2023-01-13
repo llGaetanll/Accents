@@ -10,7 +10,7 @@
  * google docs or online text editors. For such websites, an adhoc solution may
  * be necessary.
  */
-export const getCaret = (field) => {
+export const getCaret = (field, debug = false) => {
   // simple wrapper for adding elements to the DOM
   const createElement = (type, parent) => {
     var el = document.createElement(type);
@@ -39,6 +39,11 @@ export const getCaret = (field) => {
   fieldMirror.style.left = field.offsetLeft + "px";
   fieldMirror.style.opacity = 0;
 
+  if (debug) {
+    fieldMirror.style.opacity = 0.8;
+    fieldMirror.style.background = "yellow";
+  }
+
   // set the invisible textarea's text to that of the current text area
   fieldMirrorInline.innerHTML = field.value.substr(0, field.selectionStart);
 
@@ -49,8 +54,17 @@ export const getCaret = (field) => {
   const y = lastRect.y; // height is taken to be the top
 
   // now that we have the coordinates, delete the extra elements we created
-  fieldMirror.remove();
-  fieldMirrorInline.remove();
+  if (debug) {
+    // if we're debugging the position of the caret
+    // wait 2 seconds before removing the elements
+    setTimeout(() => {
+      fieldMirror.remove();
+      fieldMirrorInline.remove();
+    }, 2_000);
+  } else {
+    fieldMirror.remove();
+    fieldMirrorInline.remove();
+  }
 
   return [x, y];
 };
