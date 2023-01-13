@@ -35,6 +35,7 @@ module.exports = {
       {
         // allows us to import css files into our components
         test: /\.css$/i,
+        exclude: /node_modules/,
         use: ["style-loader", "css-loader"],
       },
     ],
